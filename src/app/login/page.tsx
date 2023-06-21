@@ -19,12 +19,20 @@ const LoginPage = () => {
               variant="outlined"
             />
           </Box>
+          <Box>
+            <TextField
+              style={{ width: 300 }}
+              id="outlined-basic"
+              label="password"
+              variant="outlined"
+            />
+          </Box>
           <Button variant="contained" size="small" style={{ width: 300 }}>
             Signin
           </Button>
         </form>
         <Link href="/branch" className={styles.b}>
-          Signin
+          Sign in
         </Link>
       </div>
     </main>

@@ -8,6 +8,7 @@
 }
 .textColor {
   color: #000;
+  padding:0.5rem;
 }
 .container {
   flex-direction: "row";
@@ -23,16 +24,28 @@
   display: flex;
 }
 .branchesTable {
-  width: 80rem;
+  padding: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 80%;
+  padding: 1rem 1rem;
+  border: 1px solid var(gray);
 }
 .sidebar {
-  /* position: fixed; */
-  width: 180px;
+  width: 100%;
   height: 700px;
-  background-color: #e6e6e6;
+  color: #3c3b3b;
+  flex-direction: column;
+  padding: 5px;
 }
 .sidebarText {
-  color: #000;
+  background-color: #5e5e5e;
+  border-radius: 0.5rem;
+  box-sizing: content-box;
+  padding:0.25rem;
+}
+.sidebarText:hover {
+  color: #b1b0b0;
 }
 .input {
   display: flex;

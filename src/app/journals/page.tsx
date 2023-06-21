@@ -67,7 +67,6 @@ const columns: ColumnData[] = [
     dataKey: "address",
     numeric: true,
   },
- 
 ];
 
 const rows: Data[] = Array.from({ length: 200 }, (_, index) => {
@@ -82,7 +81,7 @@ const VirtuosoTableComponents: TableComponents<Data> = {
   Table: (props) => (
     <Table
       {...props}
-      sx={{ borderCollapse: "separate", tableLayout: "fixed" }}
+      sx={{ borderCollapse: "separate", tableLayout: "auto" }}
     />
   ),
   TableHead,
@@ -127,7 +126,7 @@ function rowContent(_index: number, row: Data) {
   );
 }
 
-const ViewBranches = () => {
+const ViewJournal = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -149,9 +148,8 @@ const ViewBranches = () => {
       </div>
       <div className={styles.content}>
         <div className={styles.branchesTable}>
-        <h1 className={styles.textColor}>View Branches</h1>
-          <Paper style={{ height: 600, width: "80%" }}>
-
+          <h1 className={styles.textColor}>View Branches</h1>
+          <Paper style={{ height: 500, width: "80%" }}>
             <TableVirtuoso
               data={rows}
               components={VirtuosoTableComponents}
@@ -165,4 +163,4 @@ const ViewBranches = () => {
   );
 };
 
-export default ViewBranches;
+export default ViewJournal;

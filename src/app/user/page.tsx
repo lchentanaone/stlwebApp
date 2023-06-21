@@ -46,11 +46,61 @@ const User = () => {
             <TextField
               style={{ width: 300, marginBottom: 10 }}
               id="outlined-basic"
-              label="Code"
+              label="Username"
               variant="outlined"
               size="small"
             />
-
+            <TextField
+              style={{ width: 300, marginBottom: 10 }}
+              id="outlined-basic"
+              label="Password"
+              variant="outlined"
+              size="small"
+            />
+            <TextField
+              style={{ width: 300, marginBottom: 10 }}
+              id="outlined-basic"
+              label="First Name"
+              variant="outlined"
+              size="small"
+            />
+            <TextField
+              style={{ width: 300, marginBottom: 10 }}
+              id="outlined-basic"
+              label="Middle Name"
+              variant="outlined"
+              size="small"
+            />
+            <TextField
+              style={{ width: 300, marginBottom: 10 }}
+              id="outlined-basic"
+              label="Last Name"
+              variant="outlined"
+              size="small"
+            />
+            <Box sx={{ minWidth: 120, marginBottom: 2 }}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Position</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={branch}
+                  label="Position"
+                  onChange={handleChange}
+                >
+                  <MenuItem value={10}>Cashier</MenuItem>
+                  <MenuItem value={20}>Runner</MenuItem>
+                  <MenuItem value={30}>Collector</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+            <TextField
+              style={{ width: 300, marginBottom: 10 }}
+              id="outlined-basic"
+              label="Daily Rental"
+              variant="outlined"
+              size="small"
+            />
             <Button variant="contained" size="medium">
               Save
             </Button>
