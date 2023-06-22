@@ -26,7 +26,7 @@ const Journal = () => {
       </div>
       <div className={styles.content}>
         <div>
-          <h1 className={styles.textColor}>New Expenses</h1>
+          <h1 className={styles.textColor}>New Journal</h1>
           <div className={styles.input}>
             <Box sx={{ minWidth: 120, marginBottom: 2 }}>
                 <FormControl fullWidth>

@@ -67,6 +67,12 @@ const columns: ColumnData[] = [
     dataKey: "address",
     numeric: true,
   },
+  // {
+  //   width: 50,
+  //   label: "Edit",
+  //   dataKey: "",
+  //   numeric: true,
+  // },
  
 ];
 

@@ -8,8 +8,8 @@ import Button from "@mui/material/Button";
 const LoginPage = () => {
   return (
     <main className={styles.main}>
-      <div>
-        <h1 className={styles.textColor}>Login Page</h1>
+      <div className={styles.boxContainer}>
+        <h1>Login Page</h1>
         <form>
           <Box>
             <TextField
@@ -31,7 +31,7 @@ const LoginPage = () => {
             Signin
           </Button>
         </form>
-        <Link href="/branch" className={styles.b}>
+        <Link href="/branch">
           Sign in
         </Link>
       </div>

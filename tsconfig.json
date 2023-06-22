@@ -30,6 +30,6 @@
     ".next/types/**/*.ts",
     "src/app/login/dashboard.tsx",
     "src/app/page.jsx"
-  ],
+, "components/Sidebar.js"  ],
   "exclude": ["node_modules"]
 }

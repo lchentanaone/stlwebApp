@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import styles from "./../page.module.css";
 import Sidebar from "../sidebar/page";
 import TextField from "@mui/material/TextField";
@@ -13,9 +13,51 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 const User = () => {
   const [branch, setBranch] = React.useState("");
+  const [responseData, setResponseData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+    first_name: '',
+    middle_name: '',
+    last_name: '',
+    daily_rental: '',
+    position: '',
+    status: 'active',
+    attendant_ID: '2',
+    branch_ID: '4'
+  });
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setBranch(event.target.value as string);
+  const handleChange = (event:any) => {
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+
+  // const handleChange = (event: SelectChangeEvent) => {
+  //   setBranch(event.target.value as string);
+  // };
+
+  const fetchData = async () => {
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('http://localhost:8000/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      const jsonData = await response.json();
+      setResponseData(jsonData);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -35,7 +77,7 @@ const User = () => {
                   id="demo-simple-select"
                   value={branch}
                   label="Branch"
-                  onChange={handleChange}
+                  // onChange={handleChange}
                 >
                   <MenuItem value={10}>Buhangin</MenuItem>
                   <MenuItem value={20}>Mintal</MenuItem>
@@ -49,6 +91,8 @@ const User = () => {
               label="Username"
               variant="outlined"
               size="small"
+              name="username"
+              onChange={handleChange}
             />
             <TextField
               style={{ width: 300, marginBottom: 10 }}
@@ -56,6 +100,8 @@ const User = () => {
               label="Password"
               variant="outlined"
               size="small"
+              name="password"
+              onChange={handleChange}
             />
             <TextField
               style={{ width: 300, marginBottom: 10 }}
@@ -63,6 +109,8 @@ const User = () => {
               label="First Name"
               variant="outlined"
               size="small"
+              name="first_name"
+              onChange={handleChange}
             />
             <TextField
               style={{ width: 300, marginBottom: 10 }}
@@ -70,6 +118,8 @@ const User = () => {
               label="Middle Name"
               variant="outlined"
               size="small"
+              name="middle_name"
+              onChange={handleChange}
             />
             <TextField
               style={{ width: 300, marginBottom: 10 }}
@@ -77,6 +127,8 @@ const User = () => {
               label="Last Name"
               variant="outlined"
               size="small"
+              name="last_name"
+              onChange={handleChange}
             />
             <Box sx={{ minWidth: 120, marginBottom: 2 }}>
               <FormControl fullWidth>
@@ -86,11 +138,12 @@ const User = () => {
                   id="demo-simple-select"
                   value={branch}
                   label="Position"
+                  name="position"
                   onChange={handleChange}
                 >
-                  <MenuItem value={10}>Cashier</MenuItem>
-                  <MenuItem value={20}>Runner</MenuItem>
-                  <MenuItem value={30}>Collector</MenuItem>
+                  <MenuItem value="cashier">Cashier</MenuItem>
+                  <MenuItem value="runner">Runner</MenuItem>
+                  <MenuItem value="collector">Collector</MenuItem>
                 </Select>
               </FormControl>
             </Box>
@@ -100,9 +153,12 @@ const User = () => {
               label="Daily Rental"
               variant="outlined"
               size="small"
+              name="daily_rental"
+              onChange={handleChange}
             />
-            <Button variant="contained" size="medium">
-              Save
+            
+            <Button variant="contained" size="medium" onClick={fetchData} disabled={isLoading}>
+              {isLoading ? 'Loading...' : 'Save'}
             </Button>
           </div>
         </div>
