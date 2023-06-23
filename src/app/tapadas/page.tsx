@@ -10,24 +10,55 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
+import { Alert, Button, CircularProgress } from '@mui/material';
+import { Delete, Edit } from '@mui/icons-material';
+
 const ViewTapadas = () => {
   const [data, setData] = useState([]);
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/tapada');
-        const jsonData = await response.json();
-        setData(jsonData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+  const [isLoading, setIsLoading] = useState(false);
 
+  const fetchData = async () => {
+    console.log("fetchData called");
+    try {
+      const response = await fetch('http://localhost:8000/tapada/');
+      const jsonData = await response.json();
+      setData(jsonData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
 
-  // const classes = useStyles();
+  const handleDelete = async (id:number) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('http://localhost:8000/tapada/'+id, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      fetchData();
+      setTimeout(function() {
+        setIsLoading(false);
+      }, 1000)
+      
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setTimeout(function() {
+        setIsLoading(false);
+      }, 1000)
+    }
+  };
+
+  const handleUpdate = (id: any) => {
+    // Show update alert action
+    alert(`Updated item with ID: ${id}`);
+  };
+
   return (
     <div className={styles.container}>
       <div>
@@ -55,6 +86,14 @@ const ViewTapadas = () => {
                   <TableCell>{row.draw_time}</TableCell>
                   <TableCell>{row.runner_name}</TableCell>
                   <TableCell>{row.amount}</TableCell>
+                  <TableCell>
+                    <Button variant="outlined" startIcon={<Edit />} onClick={() => handleUpdate(row.id)}>
+                      Update
+                    </Button>
+                    <Button variant="outlined" startIcon={<Delete />} onClick={() => handleDelete(row.id)}>
+                      Delete
+                    </Button>
+                  </TableCell>
                 </TableRow>
                 )
               })}
@@ -62,6 +101,7 @@ const ViewTapadas = () => {
           </Table>
         </TableContainer>
       </div>
+      {isLoading && (<div className={styles.vhcenter}><CircularProgress /></div>)}
     </div>
   );
 };

@@ -5,14 +5,7 @@ import Sidebar from "../sidebar/page";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-
 const Branch = () => {
-  // const [branch, setBranch] = React.useState("");
   const [responseData, setResponseData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -27,11 +20,6 @@ const Branch = () => {
       [event.target.name]: event.target.value,
     });
   };
-
-
-  // const handleChange = (event: SelectChangeEvent) => {
-  //   setBranch(event.target.value as string);
-  // };
 
   const fetchData = async () => {
     setIsLoading(true);

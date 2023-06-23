@@ -19,7 +19,7 @@ const Journal = () => {
     accounting: '',
     description:'',
     amount: '',
-    branch_ID: 2,
+    branch_ID: 5,
     accounting_ID: 1,
   });
 

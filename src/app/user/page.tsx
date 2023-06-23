@@ -35,11 +35,6 @@ const User = () => {
     });
   };
 
-
-  // const handleChange = (event: SelectChangeEvent) => {
-  //   setBranch(event.target.value as string);
-  // };
-
   const fetchData = async () => {
     setIsLoading(true);
 
