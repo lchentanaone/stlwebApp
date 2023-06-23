@@ -53,6 +53,21 @@ const Sidebar = () => {
           </ul>
         </li>
         <li>
+          <h3>Bets</h3>
+          <ul>
+            <li>
+              <Link href="/bet" className={styles.textColor}>
+                Add
+              </Link>
+            </li>
+            <li>
+              <Link href="/bets" className={styles.textColor}>
+                View
+              </Link>
+            </li>
+          </ul>
+        </li>
+        <li>
           <h3>Expenses</h3>
           <ul>
             <li>

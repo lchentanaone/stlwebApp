@@ -5,39 +5,38 @@ import Sidebar from "../sidebar/page";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { DatePicker, DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 
-const Branch = () => {
-  // const [branch, setBranch] = React.useState("");
+
+const Bet = () => {
+  const [selectedDate, setSelectedDate] = useState(null);
   const [responseData, setResponseData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    code: '',
-    name: '',
-    address: '',
-    attendant_ID: '3'
+    date: '',
+    draw_time: '',
+    game_mode: '',
+    number: '',
+    amount: '',
+    user_ID: 2,
+    
   });
+
+  const handleDateChange = (date: React.SetStateAction<null>) => {
+    setSelectedDate(date);
+  };
   const handleChange = (event:any) => {
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
     });
   };
-
-
-  // const handleChange = (event: SelectChangeEvent) => {
-  //   setBranch(event.target.value as string);
-  // };
-
   const fetchData = async () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8000/user', {
+      const response = await fetch('http://localhost:8000/bets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,6 +51,7 @@ const Branch = () => {
       setIsLoading(false);
     }
   };
+
   return (
     <div className={styles.container}>
       <div>
@@ -59,38 +59,51 @@ const Branch = () => {
       </div>
       <div className={styles.content}>
         <div>
-          <h1 className={styles.textColor}>New Branch</h1>
+          <h1 className={styles.textColor}>New Lotto Bets</h1>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DateTimePicker
+              label="DateTime"
+              value={selectedDate}
+              onChange={handleDateChange}
+            />
+          </LocalizationProvider>
           <div className={styles.input}>
+          
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Draw DateTime"
+              value={selectedDate}
+              onChange={handleDateChange}
+            />
+          </LocalizationProvider>
             <TextField
               style={{ width: 300, marginBottom: 10 }}
               id="outlined-basic"
-              label="Code"
+              label="Game Mode"
               variant="outlined"
               size="small"
-              name="code"
+              name="game_mode"
               onChange={handleChange}
-
             />
             <TextField
               style={{ width: 300, marginBottom: 10 }}
               id="outlined-basic"
-              label="Name"
+              label="Number"
               variant="outlined"
               size="small"
-              name="name"
+              name="number"
               onChange={handleChange}
-
             />
-            <TextField
+              <TextField
               style={{ width: 300, marginBottom: 10 }}
               id="outlined-basic"
-              label="Address"
+              label="Amount"
               variant="outlined"
               size="small"
-              name="address"
+              name="amount"
               onChange={handleChange}
-
             />
+            
             <Button variant="contained" size="medium" onClick={fetchData} disabled={isLoading}>
               {isLoading ? 'Loading...' : 'Save'}
             </Button>
@@ -101,4 +114,4 @@ const Branch = () => {
   );
 };
 
-export default Branch;
+export default Bet;

@@ -1,25 +1,53 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import styles from "./../page.module.css";
 import Sidebar from "../sidebar/page";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-// import { DatePicker } from '@mui/x-date-pickers-pro';
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { DatePicker, DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+
 
 const Lotto = () => {
-  const [lotto, setLotto] = React.useState("");
-  // const [selectedDate, setSelectedDate] = React.useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [responseData, setResponseData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    date: '',
+    draw_time: '',
+    game_mode: '',
+    number: '',
+    
+  });
 
-  // const handleDateChange = (date: React.SetStateAction<null>) => {
-  //   setSelectedDate(date);
-  // };
-  const handleChange = (event: SelectChangeEvent) => {
-    setLotto(event.target.value as string);
+  const handleDateChange = (date: React.SetStateAction<null>) => {
+    setSelectedDate(date);
+  };
+  const handleChange = (event:any) => {
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value,
+    });
+  };
+  const fetchData = async () => {
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('http://localhost:8000/lotto', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      const jsonData = await response.json();
+      setResponseData(jsonData);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -30,25 +58,30 @@ const Lotto = () => {
       <div className={styles.content}>
         <div>
           <h1 className={styles.textColor}>New Lotto Result</h1>
-          <div className={styles.input}>
-          {/* <DatePicker
-            label="Date"
-            value={selectedDate}
-            onChange={(date) => setSelectedDate(date)}
-          /> */}
-            <TextField
-              style={{ width: 300, marginBottom: 10 }}
-              id="outlined-basic"
-              label="Draw Time"
-              variant="outlined"
-              size="small"
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DateTimePicker
+              label="DateTime"
+              value={selectedDate}
+              onChange={handleDateChange}
             />
+          </LocalizationProvider>
+          <div className={styles.input}>
+          
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Draw Date"
+              value={selectedDate}
+              onChange={handleDateChange}
+            />
+          </LocalizationProvider>
             <TextField
               style={{ width: 300, marginBottom: 10 }}
               id="outlined-basic"
               label="Game Mode"
               variant="outlined"
               size="small"
+              name="game_mode"
+              onChange={handleChange}
             />
             <TextField
               style={{ width: 300, marginBottom: 10 }}
@@ -56,10 +89,12 @@ const Lotto = () => {
               label="Number"
               variant="outlined"
               size="small"
+              name="number"
+              onChange={handleChange}
             />
             
-            <Button variant="contained" size="medium">
-              Save
+            <Button variant="contained" size="medium" onClick={fetchData} disabled={isLoading}>
+              {isLoading ? 'Loading...' : 'Save'}
             </Button>
           </div>
         </div>

@@ -10,15 +10,14 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-const ViewExpenses = () => {
+const ViewBets = () => {
   const [data, setData] = useState([]);
   
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/accounting');
+        const response = await fetch('http://localhost:8000/bets/');
         const jsonData = await response.json();
-        console.log({jsonData})
         setData(jsonData);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -39,19 +38,21 @@ const ViewExpenses = () => {
           <Table aria-label="MuiTableSample">
             <TableHead>
               <TableRow>
-                <TableCell>Account Title</TableCell>
-                <TableCell>Classification</TableCell>
-                <TableCell>Group</TableCell>
-                <TableCell>Type</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell>Draw Date</TableCell>
+                <TableCell>Game Mode</TableCell>
+                <TableCell>Number</TableCell>
+                <TableCell>Amount</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-            {data.map((row:any) => (
+              {data.map((row:any) => (
                 <TableRow key={row.id}>
-                  <TableCell>{row.account_title}</TableCell>
-                  <TableCell>{row.classification}</TableCell>
-                  <TableCell>{row.group}</TableCell>
-                  <TableCell>{row.type}</TableCell>
+                  <TableCell>{row.date}</TableCell>
+                  <TableCell>{row.draw_date}</TableCell>
+                  <TableCell>{row.game_mode}</TableCell>
+                  <TableCell>{row.number}</TableCell>
+                  <TableCell>{row.amount}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -62,4 +63,4 @@ const ViewExpenses = () => {
   );
 };
 
-export default ViewExpenses;
+export default ViewBets;
