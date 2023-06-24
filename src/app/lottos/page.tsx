@@ -9,9 +9,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { redirect } from 'next/navigation';
 
 import { Alert, Button, CircularProgress } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import { RedirectType } from "next/dist/client/components/redirect";
 
 const ViewLotto = () => {
   const [data, setData] = useState([]);
@@ -56,7 +58,7 @@ const ViewLotto = () => {
 
   const handleUpdate = (id: any) => {
     // Show update alert action
-    alert(`Updated item with ID: ${id}`);
+    window.location.href="/lotto/?isEdit=1&id="+id;
   };
 
   return (

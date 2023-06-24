@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from 'next/router';
 import styles from "./../page.module.css";
 import Sidebar from "../sidebar/page";
 import TextField from "@mui/material/TextField";
@@ -10,6 +11,8 @@ import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 
 
 const Expenses = () => {
+  const [isEdit, setIsEdit] = useState(false);
+  const [pageTitle, setPageTitle] = useState('Add New Expenses');
   const [selectedDate, setSelectedDate] = useState(null);
   const [responseData, setResponseData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,9 +26,17 @@ const Expenses = () => {
 
   });
 
-  const handleDateChange = (date: React.SetStateAction<null>) => {
-    setSelectedDate(date);
-  };
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log(urlParams.get('isEdit'))
+    if(urlParams.get('isEdit')) {
+      const id = urlParams.get('id');
+      if(id) {
+        setPageTitle("Edit Expenses #" + id);
+        fetchData(parseInt(id))
+      }
+    }
+  }, [])
 
   const handleChange = (event:any) => {
     setFormData({
@@ -34,7 +45,7 @@ const Expenses = () => {
     });
   };
 
-  const fetchData = async () => {
+  const addExpenses = async () => {
     setIsLoading(true);
 
     try {
@@ -52,7 +63,32 @@ const Expenses = () => {
       console.error('Error fetching data:', error);
       setIsLoading(false);
     }
-    };
+  };
+
+  const fetchData = async (id:number) => {
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('http://localhost:8000/expenses/'+id);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const jsonData = await response.json();
+      setFormData({
+        date: jsonData.date,
+        user: jsonData.user,
+        type: jsonData.type,
+        status: jsonData.status,
+        amount: jsonData.amount,
+        user_ID: jsonData.user_ID,
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div>
@@ -60,12 +96,12 @@ const Expenses = () => {
       </div>
       <div className={styles.content}>
         <div>
-          <h1 className={styles.textColor}>New Expenses</h1>
+          <h1 className={styles.textColor}>{(pageTitle)}</h1>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateTimePicker
               label="DateTime"
-              value={selectedDate}
-              onChange={handleDateChange}
+              value={formData.date}
+              // onChange={handleDateChange}
             />
           </LocalizationProvider>
           
@@ -77,6 +113,7 @@ const Expenses = () => {
               variant="outlined"
               size="small"
               name="user"
+              value={formData.user}
               onChange={handleChange}
 
             />
@@ -87,6 +124,7 @@ const Expenses = () => {
               variant="outlined"
               size="small"
               name="type"
+              value={formData.type}
               onChange={handleChange}
             />
             <TextField
@@ -96,6 +134,7 @@ const Expenses = () => {
               variant="outlined"
               size="small"
               name="status"
+              value={formData.status}
               onChange={handleChange}
             />
              <TextField
@@ -105,9 +144,10 @@ const Expenses = () => {
               variant="outlined"
               size="small"
               name="amount"
+              value={formData.amount}
               onChange={handleChange}
             />
-            <Button variant="contained" size="medium" onClick={fetchData} disabled={isLoading}>
+            <Button variant="contained" size="medium" onClick={addExpenses} disabled={isLoading}>
               {isLoading ? 'Loading...' : 'Save'}
             </Button>
           </div>

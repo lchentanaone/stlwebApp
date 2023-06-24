@@ -1,11 +1,20 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from 'next/router';
 import styles from "./../page.module.css";
 import Sidebar from "../sidebar/page";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+
 const Branch = () => {
+  const [pageTitle, setPageTitle] = useState('Add New Branch');
+  const [isEdit, setIsEdit] = useState(false);
   const [responseData, setResponseData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -14,6 +23,19 @@ const Branch = () => {
     address: '',
     attendant_ID: '3'
   });
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log(urlParams.get('isEdit'))
+    if(urlParams.get('isEdit')) {
+      const id = urlParams.get('id');
+      if(id) {
+        setPageTitle("Edit branch #" + id);
+        fetchData(parseInt(id))
+      }
+    }
+  }, [])
+
   const handleChange = (event:any) => {
     setFormData({
       ...formData,
@@ -21,11 +43,11 @@ const Branch = () => {
     });
   };
 
-  const fetchData = async () => {
+  const addBranch = async () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8000/user', {
+      const response = await fetch('http://localhost:8000/branch', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,6 +62,29 @@ const Branch = () => {
       setIsLoading(false);
     }
   };
+
+  const fetchData = async (id:number) => {
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('http://localhost:8000/branch/'+id);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const jsonData = await response.json();
+      setFormData({
+        code: jsonData.code,
+        name: jsonData.name,
+        address: jsonData.address,
+        attendant_ID: jsonData.attendant_ID,
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div>
@@ -47,7 +92,7 @@ const Branch = () => {
       </div>
       <div className={styles.content}>
         <div>
-          <h1 className={styles.textColor}>New Branch</h1>
+          <h1 className={styles.textColor}>{(pageTitle)}</h1>
           <div className={styles.input}>
             <TextField
               style={{ width: 300, marginBottom: 10 }}
@@ -56,8 +101,8 @@ const Branch = () => {
               variant="outlined"
               size="small"
               name="code"
+              value={formData.code}
               onChange={handleChange}
-
             />
             <TextField
               style={{ width: 300, marginBottom: 10 }}
@@ -66,8 +111,8 @@ const Branch = () => {
               variant="outlined"
               size="small"
               name="name"
+              value={formData.name}
               onChange={handleChange}
-
             />
             <TextField
               style={{ width: 300, marginBottom: 10 }}
@@ -76,10 +121,10 @@ const Branch = () => {
               variant="outlined"
               size="small"
               name="address"
+              value={formData.address}
               onChange={handleChange}
-
             />
-            <Button variant="contained" size="medium" onClick={fetchData} disabled={isLoading}>
+            <Button variant="contained" size="medium" onClick={addBranch} disabled={isLoading}>
               {isLoading ? 'Loading...' : 'Save'}
             </Button>
           </div>

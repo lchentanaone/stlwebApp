@@ -56,7 +56,7 @@ const ViewTapadas = () => {
 
   const handleUpdate = (id: any) => {
     // Show update alert action
-    alert(`Updated item with ID: ${id}`);
+    window.location.href="/tapadas/?isEdit=1&id="+id;
   };
 
   return (
