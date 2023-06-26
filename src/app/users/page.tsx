@@ -9,11 +9,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { redirect } from 'next/navigation'
 
 import { Alert, Button, CircularProgress } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
-import { RedirectType } from "next/dist/client/components/redirect";
 
 const ViewUsers = () => {
   const [data, setData] = useState([]);

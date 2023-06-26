@@ -20,14 +20,14 @@ const Expenses = () => {
     date: '',
     user: '',
     type: '',
-    status: '',
+    status: 'active',
     amount: '',
-    user_ID: 2,
+    user_ID: 20,
 
   });
+  const urlParams = new URLSearchParams(window.location.search);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
     console.log(urlParams.get('isEdit'))
     if(urlParams.get('isEdit')) {
       const id = urlParams.get('id');
@@ -48,20 +48,39 @@ const Expenses = () => {
   const addExpenses = async () => {
     setIsLoading(true);
 
-    try {
-      const response = await fetch('http://localhost:8000/expenses', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const jsonData = await response.json();
-      setResponseData(jsonData);
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setIsLoading(false);
+    if(urlParams.get('isEdit')) {
+      const id = urlParams.get('id');
+      try {
+        await fetch(`http://localhost:8000/expense/${id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        setIsLoading(false);
+        window.location.href="/expenses";
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setIsLoading(false);
+      }
+    }
+    else {
+      try {
+        const response = await fetch('http://localhost:8000/expense', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        const jsonData = await response.json();
+        setResponseData(jsonData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setIsLoading(false);
+      }
     }
   };
 
@@ -69,7 +88,7 @@ const Expenses = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8000/expenses/'+id);
+      const response = await fetch('http://localhost:8000/expense/'+id);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
@@ -97,6 +116,7 @@ const Expenses = () => {
       <div className={styles.content}>
         <div>
           <h1 className={styles.textColor}>{(pageTitle)}</h1>
+          <div className={styles.input}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateTimePicker
               label="DateTime"
@@ -105,7 +125,6 @@ const Expenses = () => {
             />
           </LocalizationProvider>
           
-          <div className={styles.input}>
             <TextField
               style={{ width: 300, marginBottom: 10 }}
               id="outlined-basic"

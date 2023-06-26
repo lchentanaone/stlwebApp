@@ -56,7 +56,7 @@ const ViewTapadas = () => {
 
   const handleUpdate = (id: any) => {
     // Show update alert action
-    window.location.href="/tapadas/?isEdit=1&id="+id;
+    window.location.href="/tapada/?isEdit=1&id="+id;
   };
 
   return (

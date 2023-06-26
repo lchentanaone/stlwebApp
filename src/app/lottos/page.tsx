@@ -81,7 +81,7 @@ const ViewLotto = () => {
               {data.map((row:any) => (
                 <TableRow key={row.id}>
                   <TableCell>{row.date}</TableCell>
-                  <TableCell>{row.draw_date}</TableCell>
+                  <TableCell>{row.draw_time}</TableCell>
                   <TableCell>{row.game_mode}</TableCell>
                   <TableCell>{row.number}</TableCell>
                   <TableCell>

@@ -9,8 +9,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { redirect } from 'next/navigation';
-import { RedirectType } from "next/dist/client/components/redirect";
 
 import { Alert, Button, CircularProgress } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
@@ -22,7 +20,7 @@ const ViewExpenses = () => {
   const fetchData = async () => {
     console.log("fetchData called");
     try {
-      const response = await fetch('http://localhost:8000/expenses/');
+      const response = await fetch('http://localhost:8000/expense/');
       const jsonData = await response.json();
       setData(jsonData);
     } catch (error) {
@@ -37,7 +35,7 @@ const ViewExpenses = () => {
   const handleDelete = async (id:number) => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/expenses/'+id, {
+      const response = await fetch('http://localhost:8000/expense/'+id, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -58,7 +56,7 @@ const ViewExpenses = () => {
 
   const handleUpdate = (id: any) => {
     // Show update alert action
-    window.location.href="/lotto/?isEdit=1&id="+id;
+    window.location.href="/expense/?isEdit=1&id="+id;
   };
 
   return (

@@ -22,16 +22,16 @@ const Tapada = () => {
     draw_time: '',
     runner_name: '',
     amount: '',
-    user_ID: 2,
+    user_ID: 20,
   });
+  const urlParams = new URLSearchParams(window.location.search);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
     console.log(urlParams.get('isEdit'))
     if(urlParams.get('isEdit')) {
       const id = urlParams.get('id');
       if(id) {
-        setPageTitle("Edit user #" + id);
+        setPageTitle("Edit Tapada #" + id);
         fetchData(parseInt(id))
       }
     }
@@ -47,22 +47,42 @@ const Tapada = () => {
   const addTapada = async () => {
     setIsLoading(true);
 
-    try {
-      const response = await fetch('http://localhost:8000/tapada', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const jsonData = await response.json();
-      setResponseData(jsonData);
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setIsLoading(false);
+    if(urlParams.get('isEdit')) {
+      const id = urlParams.get('id');
+      try {
+        await fetch(`http://localhost:8000/tapada/${id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        setIsLoading(false);
+        window.location.href="/tapadas";
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setIsLoading(false);
+      }
+    }
+    else {
+      try {
+        const response = await fetch('http://localhost:8000/tapada', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        const jsonData = await response.json();
+        setResponseData(jsonData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setIsLoading(false);
+      }
     }
   };
+
 
   const fetchData = async (id:number) => {
     setIsLoading(true);
@@ -95,6 +115,7 @@ const Tapada = () => {
       <div className={styles.content}>
         <div>
           <h1 className={styles.textColor}>{(pageTitle)}</h1>
+          <div className={styles.input}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateTimePicker
               label="DateTime"
@@ -103,8 +124,16 @@ const Tapada = () => {
             />
           </LocalizationProvider>
           
-          <div className={styles.input}>
-
+          <TextField
+              style={{ width: 300, marginBottom: 10 }}
+              id="outlined-basic"
+              label="User"
+              variant="outlined"
+              size="small"
+              name="user"
+              value={formData.user}
+              onChange={handleChange}
+            />
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateTimePicker
               label="Draw Time"
@@ -112,7 +141,7 @@ const Tapada = () => {
               // onChange={handleDateChange}
             />
           </LocalizationProvider>
-           
+          
             <TextField
               style={{ width: 300, marginBottom: 10 }}
               id="outlined-basic"

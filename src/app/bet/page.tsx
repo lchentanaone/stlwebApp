@@ -23,11 +23,11 @@ const Bet = () => {
     number: '',
     amount: '',
     user_ID: 2,
-    
   });
+    
+  const urlParams = new URLSearchParams(window.location.search);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
     console.log(urlParams.get('isEdit'))
     if(urlParams.get('isEdit')) {
       const id = urlParams.get('id');
@@ -45,23 +45,42 @@ const Bet = () => {
     });
   };
 
-  const addBets = async () => {
+  const addBet = async () => {
     setIsLoading(true);
 
-    try {
-      const response = await fetch('http://localhost:8000/bets', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const jsonData = await response.json();
-      setResponseData(jsonData);
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setIsLoading(false);
+    if(urlParams.get('isEdit')) {
+      const id = urlParams.get('id');
+      try {
+        await fetch(`http://localhost:8000/bet/${id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        setIsLoading(false);
+        window.location.href="/bets";
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setIsLoading(false);
+      }
+    }
+    else {
+      try {
+        const response = await fetch('http://localhost:8000/bet', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        const jsonData = await response.json();
+        setResponseData(jsonData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setIsLoading(false);
+      }
     }
   };
 
@@ -69,7 +88,7 @@ const Bet = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8000/bets/'+id);
+      const response = await fetch('http://localhost:8000/bet/'+id);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
@@ -145,7 +164,7 @@ const Bet = () => {
               onChange={handleChange}
             />
             
-            <Button variant="contained" size="medium" onClick={addBets} disabled={isLoading}>
+            <Button variant="contained" size="medium" onClick={addBet} disabled={isLoading}>
               {isLoading ? 'Loading...' : 'Save'}
             </Button>
           </div>

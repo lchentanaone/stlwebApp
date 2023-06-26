@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from 'next/router';
 import styles from "./../page.module.css";
 import Sidebar from "../sidebar/page";
 import TextField from "@mui/material/TextField";
@@ -15,6 +14,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 const User = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [branch, setBranch] = React.useState("");
+  const [branches, setBranches] = React.useState([]);
   const [responseData, setResponseData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [pageTitle, setPageTitle] = useState('Add new user');
@@ -28,12 +28,13 @@ const User = () => {
     position: '',
     status: 'active',
     attendant_ID: '2',
-    branch_ID: '4'
+    branch_ID: '7'
   });
+  const urlParams = new URLSearchParams(window.location.search);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
     console.log(urlParams.get('isEdit'))
+    fetchBranches();
     if(urlParams.get('isEdit')) {
       const id = urlParams.get('id');
       if(id) {
@@ -43,32 +44,79 @@ const User = () => {
     }
   }, [])
 
+  // useEffect(() => {
+  //   console.log({formData, branches})
+  // }, [formData])
+
   const handleChange = (event:any) => {
+    console.log('called')
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
     });
+    console.log({formData})
   };
 
   const addUser = async () => {
     setIsLoading(true);
 
-    try {
-      const response = await fetch('http://localhost:8000/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const jsonData = await response.json();
-      setResponseData(jsonData);
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setIsLoading(false);
+    if(urlParams.get('isEdit')) {
+      const id = urlParams.get('id');
+      try {
+        await fetch(`http://localhost:8000/user/${id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        setIsLoading(false);
+        window.location.href="/users";
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setIsLoading(false);
+      }
+    }
+    else {
+      try {
+        const response = await fetch('http://localhost:8000/user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        const jsonData = await response.json();
+        setResponseData(jsonData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setIsLoading(false);
+      }
     }
   };
+  const fetchBranches = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('http://localhost:8000/branch/');
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const jsonData = await response.json();
+      const branches = jsonData.map((item: any) => {
+        return {
+          label: item.name,
+          value: item.id
+        }
+      })
+      setBranches(branches);
+
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const fetchData = async (id:number) => {
     setIsLoading(true);
@@ -89,8 +137,9 @@ const User = () => {
         position: jsonData.position,
         status: jsonData.status,
         attendant_ID: jsonData.attendant_ID,
-        branch_ID: jsonData.branch_ID
+        branch_ID: jsonData.branch.length > 0 ? jsonData.branch[0].id : 0
       });
+      
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -110,13 +159,19 @@ const User = () => {
             <Box sx={{ minWidth: 120, marginBottom: 2 }}>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Branch</InputLabel>
-                <Select
+                <Select 
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={formData.branch_ID}
+                  name="branch_ID"
                   label="Branch"
-                  // onChange={handleChange}
+                  onChange={handleChange}
+                  value={formData.branch_ID}
                 >
+                  {branches.map((option:any) => (
+                    <MenuItem key={option.value} value={option.value} selected={option.value === formData.branch_ID}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>

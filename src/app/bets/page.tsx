@@ -23,7 +23,7 @@ const ViewBets = () => {
   const fetchData = async () => {
     console.log("fetchData called");
     try {
-      const response = await fetch('http://localhost:8000/bets/');
+      const response = await fetch('http://localhost:8000/bet/');
       const jsonData = await response.json();
       setData(jsonData);
     } catch (error) {
@@ -38,7 +38,7 @@ const ViewBets = () => {
   const handleDelete = async (id:number) => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/bets/'+id, {
+      const response = await fetch('http://localhost:8000/bet/'+id, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ const ViewBets = () => {
 
   const handleUpdate = (id: any) => {
     // Show update alert action
-    window.location.href="/bets/?isEdit=1&id="+id;
+    window.location.href="/bet/?isEdit=1&id="+id;
   };
 
   return (
@@ -73,7 +73,7 @@ const ViewBets = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Date</TableCell>
-                <TableCell>Draw Date</TableCell>
+                <TableCell>Draw Time</TableCell>
                 <TableCell>Game Mode</TableCell>
                 <TableCell>Number</TableCell>
                 <TableCell>Amount</TableCell>
@@ -83,7 +83,7 @@ const ViewBets = () => {
               {data.map((row:any) => (
                 <TableRow key={row.id}>
                   <TableCell>{row.date}</TableCell>
-                  <TableCell>{row.draw_date}</TableCell>
+                  <TableCell>{row.draw_time}</TableCell>
                   <TableCell>{row.game_mode}</TableCell>
                   <TableCell>{row.number}</TableCell>
                   <TableCell>{row.amount}</TableCell>

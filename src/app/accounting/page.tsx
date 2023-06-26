@@ -17,9 +17,9 @@ const Accounting = () => {
     group: '',
     type: '',
   });
+  const urlParams = new URLSearchParams(window.location.search);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
     console.log(urlParams.get('isEdit'))
     if(urlParams.get('isEdit')) {
       const id = urlParams.get('id');

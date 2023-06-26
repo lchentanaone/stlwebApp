@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from 'next/router';
 import styles from "./../page.module.css";
 import Sidebar from "../sidebar/page";
 import TextField from "@mui/material/TextField";
@@ -23,9 +22,9 @@ const Branch = () => {
     address: '',
     attendant_ID: '3'
   });
+  const urlParams = new URLSearchParams(window.location.search);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
     console.log(urlParams.get('isEdit'))
     if(urlParams.get('isEdit')) {
       const id = urlParams.get('id');
@@ -46,20 +45,39 @@ const Branch = () => {
   const addBranch = async () => {
     setIsLoading(true);
 
-    try {
-      const response = await fetch('http://localhost:8000/branch', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const jsonData = await response.json();
-      setResponseData(jsonData);
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setIsLoading(false);
+    if(urlParams.get('isEdit')) {
+      const id = urlParams.get('id');
+       try {
+        await fetch(`http://localhost:8000/branch/${id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        setIsLoading(false);
+        window.location.href="/branches";
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setIsLoading(false);
+      }
+    }
+    else {
+      try {
+        const response = await fetch('http://localhost:8000/branch', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        const jsonData = await response.json();
+        setResponseData(jsonData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setIsLoading(false);
+      }
     }
   };
 
