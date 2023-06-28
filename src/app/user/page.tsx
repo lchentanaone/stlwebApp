@@ -13,7 +13,6 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 const User = () => {
   const [isEdit, setIsEdit] = useState(false);
-  const [branch, setBranch] = React.useState("");
   const [branches, setBranches] = React.useState([]);
   const [responseData, setResponseData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +27,7 @@ const User = () => {
     position: '',
     status: 'active',
     attendant_ID: '2',
-    branch_ID: '7'
+    branch_ID: '1'
   });
   const urlParams = new URLSearchParams(window.location.search);
 
@@ -43,10 +42,6 @@ const User = () => {
       }
     }
   }, [])
-
-  // useEffect(() => {
-  //   console.log({formData, branches})
-  // }, [formData])
 
   const handleChange = (event:any) => {
     console.log('called')
@@ -72,6 +67,7 @@ const User = () => {
         });
         setIsLoading(false);
         window.location.href="/users";
+
       } catch (error) {
         console.error('Error fetching data:', error);
         setIsLoading(false);
@@ -87,7 +83,9 @@ const User = () => {
           body: JSON.stringify(formData),
         });
         const jsonData = await response.json();
-        setResponseData(jsonData);
+        window.location.href="/users";
+
+        // setResponseData(jsonData);
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);

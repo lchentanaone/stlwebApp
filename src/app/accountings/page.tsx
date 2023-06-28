@@ -10,7 +10,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-import { Alert, Button, CircularProgress } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 
 const ViewExpenses = () => {
@@ -55,7 +55,6 @@ const ViewExpenses = () => {
   };
 
   const handleUpdate = (id: any) => {
-    // Show update alert action
     window.location.href="/accounting/?isEdit=1&id="+id;
   };
 
@@ -66,6 +65,7 @@ const ViewExpenses = () => {
       </div>
       <div className={styles.content}>
         <TableContainer component={Paper}>
+        <h1 className={styles.textColor}>Accounting Chart</h1>
           <Table aria-label="MuiTableSample">
             <TableHead>
               <TableRow>

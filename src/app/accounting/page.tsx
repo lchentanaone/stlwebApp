@@ -8,8 +8,7 @@ import Button from "@mui/material/Button";
 
 const Accounting = () => {
   const [responseData, setResponseData] = useState(null);
-  const [isEdit, setIsEdit] = useState(false);
-  const [pageTitle, setPageTitle] = useState('Add new user');
+  const [pageTitle, setPageTitle] = useState('Add New User');
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     account_title: '',
@@ -49,6 +48,7 @@ const Accounting = () => {
         body: JSON.stringify(formData),
       });
       const jsonData = await response.json();
+      window.location.href="/accountings";
       setResponseData(jsonData);
       setIsLoading(false);
     } catch (error) {

@@ -9,11 +9,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { redirect } from 'next/navigation'
 
-import { Alert, Button, CircularProgress } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
-import { RedirectType } from "next/dist/client/components/redirect";
 
 
 const ViewBets = () => {
@@ -21,9 +19,8 @@ const ViewBets = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchData = async () => {
-    console.log("fetchData called");
     try {
-      const response = await fetch('http://localhost:8000/bet/');
+      const response = await fetch('http://localhost:8000/bets/');
       const jsonData = await response.json();
       setData(jsonData);
     } catch (error) {
@@ -38,7 +35,7 @@ const ViewBets = () => {
   const handleDelete = async (id:number) => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/bet/'+id, {
+      const response = await fetch('http://localhost:8000/bets/'+id, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +47,6 @@ const ViewBets = () => {
       }, 1000)
       
     } catch (error) {
-      console.error('Error fetching data:', error);
       setTimeout(function() {
         setIsLoading(false);
       }, 1000)
@@ -58,7 +54,6 @@ const ViewBets = () => {
   };
 
   const handleUpdate = (id: any) => {
-    // Show update alert action
     window.location.href="/bet/?isEdit=1&id="+id;
   };
 
@@ -69,6 +64,7 @@ const ViewBets = () => {
       </div>
       <div className={styles.content}>
         <TableContainer component={Paper}>
+          <h1 className={styles.textColor}>Lotto Bets</h1>
           <Table aria-label="MuiTableSample">
             <TableHead>
               <TableRow>

@@ -1,34 +1,43 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from 'next/router';
 import styles from "./../page.module.css";
 import Sidebar from "../sidebar/page";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select"
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { format } from 'date-fns';
 
+interface formData_i {
+  date: any,
+  type: string,
+  status: string,
+  amount : string,
+  user_ID : number
+}
 
 const Expenses = () => {
   const [isEdit, setIsEdit] = useState(false);
+  const [users, setUsers] = React.useState([]);
   const [pageTitle, setPageTitle] = useState('Add New Expenses');
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [responseData, setResponseData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    date: '',
-    user: '',
+  const [formData, setFormData] = useState<formData_i>({
+    date: new Date(),
     type: '',
-    status: 'active',
+    status: '',
     amount: '',
-    user_ID: 20,
-
+    user_ID: 1,
   });
   const urlParams = new URLSearchParams(window.location.search);
 
   useEffect(() => {
-    console.log(urlParams.get('isEdit'))
+    fetchUsers();
     if(urlParams.get('isEdit')) {
       const id = urlParams.get('id');
       if(id) {
@@ -37,6 +46,13 @@ const Expenses = () => {
       }
     }
   }, [])
+
+  const handleDateChange = (value:any) => {
+    const tempFormData = formData;
+    tempFormData.date = new Date(value);
+
+    setFormData(tempFormData);
+  }
 
   const handleChange = (event:any) => {
     setFormData({
@@ -48,15 +64,19 @@ const Expenses = () => {
   const addExpenses = async () => {
     setIsLoading(true);
 
+    const tempFormData = {...formData};
+    const selectedDate = new Date(tempFormData.date);
+    tempFormData.date = format(selectedDate, 'yyyy-MM-dd').toString();
+    
     if(urlParams.get('isEdit')) {
       const id = urlParams.get('id');
       try {
-        await fetch(`http://localhost:8000/expense/${id}`, {
+        await fetch(`http://localhost:8000/expenses/${id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(tempFormData),
         });
         setIsLoading(false);
         window.location.href="/expenses";
@@ -67,16 +87,17 @@ const Expenses = () => {
     }
     else {
       try {
-        const response = await fetch('http://localhost:8000/expense', {
+        const response = await fetch('http://localhost:8000/expenses', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(tempFormData),
         });
         const jsonData = await response.json();
-        setResponseData(jsonData);
+        window.location.href="/expenses";
         setIsLoading(false);
+        
       } catch (error) {
         console.error('Error fetching data:', error);
         setIsLoading(false);
@@ -84,22 +105,54 @@ const Expenses = () => {
     }
   };
 
-  const fetchData = async (id:number) => {
+  const fetchUsers = async () => {
     setIsLoading(true);
-
     try {
-      const response = await fetch('http://localhost:8000/expense/'+id);
+      const response = await fetch('http://localhost:8000/user/');
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
       const jsonData = await response.json();
-      setFormData({
-        date: jsonData.date,
-        user: jsonData.user,
+      const users = jsonData.map((item: any) => {
+        return {
+          label: item.username,
+          value: item.id
+        }
+      })
+      setUsers(users);
+
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const fetchData = async (id:number) => {
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('http://localhost:8000/expenses/'+id);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const jsonData = await response.json();
+      
+      const selectedDate = new Date(jsonData.date);
+
+      console.log({
+        date: selectedDate,
         type: jsonData.type,
         status: jsonData.status,
         amount: jsonData.amount,
-        user_ID: jsonData.user_ID,
+        user_ID: jsonData.user.length > 0 ? jsonData.user[0].id : 0
+      })
+      setFormData({
+        date: selectedDate,
+        type: jsonData.type,
+        status: jsonData.status,
+        amount: jsonData.amount,
+        user_ID: jsonData.user.length > 0 ? jsonData.user[0].id : 0
       });
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -117,25 +170,34 @@ const Expenses = () => {
         <div>
           <h1 className={styles.textColor}>{(pageTitle)}</h1>
           <div className={styles.input}>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DateTimePicker
-              label="DateTime"
-              value={formData.date}
-              // onChange={handleDateChange}
-            />
-          </LocalizationProvider>
-          
-            <TextField
-              style={{ width: 300, marginBottom: 10 }}
-              id="outlined-basic"
-              label="User"
-              variant="outlined"
-              size="small"
-              name="user"
-              value={formData.user}
-              onChange={handleChange}
-
-            />
+          <Box sx={{ minWidth: 120, marginBottom: 2 }}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="Date"
+                value={formData.date}
+                onChange={handleDateChange}
+              />
+            </LocalizationProvider>
+          </Box>
+          <Box sx={{ minWidth: 120, marginBottom: 2 }}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">User</InputLabel>
+                <Select 
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="User"
+                  name="user_ID"
+                  value={formData.user_ID}
+                  onChange={handleChange}
+                >
+                  {users.map((option:any) => (
+                    <MenuItem key={option.value} value={option.value} selected={option.value === formData.user_ID}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
             <TextField
               style={{ width: 300, marginBottom: 10 }}
               id="outlined-basic"

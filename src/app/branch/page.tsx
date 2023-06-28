@@ -5,12 +5,6 @@ import Sidebar from "../sidebar/page";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-
 const Branch = () => {
   const [pageTitle, setPageTitle] = useState('Add New Branch');
   const [isEdit, setIsEdit] = useState(false);
@@ -25,7 +19,6 @@ const Branch = () => {
   const urlParams = new URLSearchParams(window.location.search);
 
   useEffect(() => {
-    console.log(urlParams.get('isEdit'))
     if(urlParams.get('isEdit')) {
       const id = urlParams.get('id');
       if(id) {
@@ -72,6 +65,7 @@ const Branch = () => {
           body: JSON.stringify(formData),
         });
         const jsonData = await response.json();
+        window.location.href="/branches";
         setResponseData(jsonData);
         setIsLoading(false);
       } catch (error) {

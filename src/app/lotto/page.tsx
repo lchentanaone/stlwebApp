@@ -1,14 +1,17 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from 'next/router';
 import styles from "./../page.module.css";
 import Sidebar from "../sidebar/page";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import { DatePicker, DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
-
+import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 
 const Lotto = () => {
   const [isEdit, setIsEdit] = useState(false);
@@ -112,23 +115,36 @@ const Lotto = () => {
       </div>
       <div className={styles.content}>
         <div>
-          <h1 className={styles.textColor}>{(pageTitle)}</h1>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DateTimePicker
-              label="DateTime"
-              // value={formData.date}
-              // onChange={handleDateChange}
-            />
-          </LocalizationProvider>
+        <h1 className={styles.textColor}>{(pageTitle)}</h1>
           <div className={styles.input}>
-          
+          <Box sx={{ minWidth: 120, marginBottom: 2 }}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker
-              label="Draw Date"
-              // value={formData.draw_time}
-              // onChange={handleDateChange}
+              label="Date"
+              // name="date"
+              value={selectedDate}
+              onChange={handleChange}
             />
           </LocalizationProvider>
+          </Box>
+            <Box sx={{ minWidth: 120, marginBottom: 2 }}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Draw Time</InputLabel>
+                  <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      label="Draw Time"
+                      size="small"
+                      name="draw_time"
+                      value={formData.draw_time}
+                      onChange={handleChange}
+                  >
+                      <MenuItem value="11AM">11 AM</MenuItem>
+                      <MenuItem value="4PM">4 PM</MenuItem>
+                      <MenuItem value="9PM">9 PM</MenuItem>
+                  </Select>
+              </FormControl>
+            </Box>
             <TextField
               style={{ width: 300, marginBottom: 10 }}
               id="outlined-basic"
