@@ -24,6 +24,11 @@ interface formData_i {
 }
 
 const Journal = () => {
+  const token = localStorage.getItem('token');
+    if (!token) { 
+      window.location.href = '/';
+      return false;
+    } 
   const [branches, setBranches] = React.useState([]);
   const [accountings, setAccountings] = React.useState([]);
   const [pageTitle, setPageTitle] = useState('Add New Journal');

@@ -28,8 +28,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/login/dashboard.tsx",
-    "src/app/page.jsx"
-, "components/Sidebar.js", "src/components/SubMenu.js", "src/components/SidebarData.js", "src/components/Sidebar.js"  ],
+    "src/app/page.jsx"  ],
   "exclude": ["node_modules"]
 }

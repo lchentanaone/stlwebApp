@@ -22,6 +22,11 @@ interface formData_i {
   user_ID : number
 }
 const Tapada = () => {
+  const token = localStorage.getItem('token');
+    if (!token) { 
+      window.location.href = '/';
+      return false;
+    } 
   const [isEdit, setIsEdit] = useState(false);
   const [users, setUsers] = React.useState([]);
   const [pageTitle, setPageTitle] = useState('Add New Tapada');

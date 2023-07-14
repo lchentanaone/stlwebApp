@@ -15,6 +15,11 @@ import { Delete, Edit } from '@mui/icons-material';
 
 
 const ViewBets = () => {
+  const token = localStorage.getItem('token');
+    if (!token) { 
+      window.location.href = '/';
+      return false;
+    } 
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 

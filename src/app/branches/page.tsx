@@ -9,10 +9,15 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Alert, Button, CircularProgress } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 
 const ViewBranches = () => {
+  const token = localStorage.getItem('token');
+    if (!token) { 
+      window.location.href = '/';
+      return false;
+    } 
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   

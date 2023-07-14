@@ -12,6 +12,11 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 const User = () => {
+  const token = localStorage.getItem('token');
+    if (!token) { 
+      window.location.href = '/';
+      return false;
+    } 
   const [isEdit, setIsEdit] = useState(false);
   const [branches, setBranches] = React.useState([]);
   const [responseData, setResponseData] = useState(null);

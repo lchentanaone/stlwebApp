@@ -3,6 +3,11 @@ import styles from "./../page.module.css";
 import Link from "next/link";
 
 const Sidebar = () => {
+
+  const handleLogOut = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/';
+  };
   return (
     <div className={styles.sidebar}>
       <ul>
@@ -125,8 +130,10 @@ const Sidebar = () => {
                 View
               </Link>
             </li>
+
           </ul>
         </li>
+        <button onClick={handleLogOut}>LogOut</button>
       </ul>
 
     </div>

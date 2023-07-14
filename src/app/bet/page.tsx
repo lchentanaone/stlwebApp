@@ -24,6 +24,11 @@ interface formData_i {
 }
 
 const Bet = () => {
+  const token = localStorage.getItem('token');
+    if (!token) { 
+      window.location.href = '/';
+      return false;
+    } 
   const [isEdit, setIsEdit] = useState(false);
   const [users, setUsers] = React.useState([]);
   const [pageTitle, setPageTitle] = useState('Add new bets');

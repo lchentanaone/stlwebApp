@@ -14,6 +14,11 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 
 const Lotto = () => {
+  const token = localStorage.getItem('token');
+    if (!token) { 
+      window.location.href = '/';
+      return false;
+    } 
   const [isEdit, setIsEdit] = useState(false);
   const [pageTitle, setPageTitle] = useState('Add new lotto');
   const [selectedDate, setSelectedDate] = useState(null);

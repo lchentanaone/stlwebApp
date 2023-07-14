@@ -6,6 +6,11 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
 const Branch = () => {
+  const token = localStorage.getItem('token');
+    if (!token) { 
+      window.location.href = '/';
+      return false;
+    } 
   const [pageTitle, setPageTitle] = useState('Add New Branch');
   const [isEdit, setIsEdit] = useState(false);
   const [responseData, setResponseData] = useState(null);
@@ -16,9 +21,10 @@ const Branch = () => {
     address: '',
     attendant_ID: '3'
   });
-  const urlParams = new URLSearchParams(window.location.search);
+  
 
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
     if(urlParams.get('isEdit')) {
       const id = urlParams.get('id');
       if(id) {
@@ -37,7 +43,7 @@ const Branch = () => {
 
   const addBranch = async () => {
     setIsLoading(true);
-
+    const urlParams = new URLSearchParams(window.location.search);
     if(urlParams.get('isEdit')) {
       const id = urlParams.get('id');
        try {

@@ -7,6 +7,11 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
 const Accounting = () => {
+  const token = localStorage.getItem('token');
+    if (!token) { 
+      window.location.href = '/';
+      return false;
+    } 
   const [responseData, setResponseData] = useState(null);
   const [pageTitle, setPageTitle] = useState('Add New User');
   const [isLoading, setIsLoading] = useState(false);

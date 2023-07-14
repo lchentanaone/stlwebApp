@@ -14,6 +14,11 @@ import { Button, CircularProgress } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 
 const ViewUsers = () => {
+  const token = localStorage.getItem('token');
+    if (!token) { 
+      window.location.href = '/';
+      return false;
+    } 
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   
